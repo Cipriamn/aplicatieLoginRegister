@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct RegisterView: View {
-    
-    @State private var username=""
+    @State private var fullName=""
+    @State private var email=""
     @State private var password=""
     @State private var password2=""
     
@@ -30,21 +30,26 @@ struct RegisterView: View {
                 RoundedRectangle(cornerRadius: 40)
                     .scale(0.4)
                     .foregroundColor(.blue.opacity(1.3))
-                    .frame(width:900,height:700)
+                    .frame(width:900,height:950)
                 
                 RoundedRectangle(cornerRadius: 40)
                     .scale(0.37)
                     .foregroundColor(.white)
-                    .frame(width:940,height:725)
+                    .frame(width:940,height:990)
                 
-                VStack{
+                VStack(spacing: 6){
                     
                     Text("Register")
                         .font(.largeTitle)
                         .bold()
+                        .padding(.bottom,14)
+                    TextField("Full Name",text:$fullName)
                         .padding()
+                        .frame(width: 240,height:40)
+                        .background(Color.black.opacity(0.1))
+                        .cornerRadius(10)
                     
-                    TextField("Email",text:$username)
+                    TextField("Email",text:$email)
                         .padding()
                         .frame(width: 240,height:40)
                         .background(Color.black.opacity(0.1))
@@ -64,9 +69,9 @@ struct RegisterView: View {
                         .border(.red,width:CGFloat(wrongPassword2))
                     
                     Button{
-                        authetificatePassword(password2, password)
+//                        authetificatePassword(password2, password)
                         Task{
-                            try await viewModel.createUser(withEmail:username, password:password)
+                            try await viewModel.createUser(withEmail:email, password:password,fullname: fullName)
                         }
                         
                     }label: {
@@ -80,14 +85,16 @@ struct RegisterView: View {
                     .frame(width: 240,height:40)
                     .background(Color.blue)
                     .cornerRadius(10)
+                    .padding(.top,8)
                     
-                    NavigationLink(destination: Text("You have created an account \(username)"), isActive:$showingRegisterScreen){
+                    NavigationLink(destination: Text("You have created an account \(email)"), isActive:$showingRegisterScreen){
                         EmptyView()
                     }
 
                     
                 }
                 .navigationBarHidden(true)
+//                .foregroundColor(.white)
  
             }
         }
@@ -107,6 +114,6 @@ struct RegisterView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        RegisterView()
+        RegisterView().environmentObject(AuthViewModel())
     }
 }

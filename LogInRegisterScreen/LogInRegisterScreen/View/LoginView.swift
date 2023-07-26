@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var username=""
+    @State private var email=""
     @State private var password=""
-    @State private var wrongUsername=0
+    @State private var wrongEmail=0
     @State private var wrongPassword=0
     @State private var showingLogInScreen=false
     @EnvironmentObject var viewModel :AuthViewModel
@@ -38,12 +38,12 @@ struct LoginView: View {
                         .bold()
                         .padding()
                     
-                    TextField("Email",text:$username)
+                    TextField("Email",text:$email)
                         .padding()
                         .frame(width: 240,height:40)
                         .background(Color.black.opacity(0.1))
                         .cornerRadius(10)
-                        .border(.red,width:CGFloat(wrongUsername))
+                        .border(.red,width:CGFloat(wrongEmail))
                     
                     SecureField("Password",text:$password)
                         .padding()
@@ -53,8 +53,8 @@ struct LoginView: View {
                         .border(.red,width:CGFloat(wrongPassword))
                     
                     Button{
-                        authetificateUser(username, password)
-                       Task{ try await viewModel.login(withEmail: username, password: password)}
+//                        authetificateUser(email, password)
+                       Task{ try await viewModel.login(withEmail: email, password: password)}
                         
                     }label: {
                         HStack{
@@ -68,7 +68,7 @@ struct LoginView: View {
                     .background(Color.blue)
                     .cornerRadius(10)
                     
-                    NavigationLink(destination: Text("You are logged in at \(username)"), isActive:$showingLogInScreen){
+                    NavigationLink(destination: Text("You are logged in at \(email)"), isActive:$showingLogInScreen){
                         EmptyView()
                     }
                     
@@ -95,9 +95,9 @@ struct LoginView: View {
             }
         }}
 
-    func authetificateUser(_ username:String,_ password:String){
-        if(username.lowercased()=="ciprian"){
-            wrongUsername=0
+    func authetificateUser(_ email:String,_ password:String){
+        if(email.lowercased()=="ciprian"){
+            wrongEmail=0
             if(password=="Ciprian"){
                 wrongPassword=0
                 showingLogInScreen=true
@@ -107,14 +107,14 @@ struct LoginView: View {
             else{ wrongPassword=2
                 
             }}
-            else{ wrongUsername=2
+            else{ wrongEmail=2
                 
             }
         }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        LoginView().environmentObject(AuthViewModel())
     }
 }
